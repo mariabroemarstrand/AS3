@@ -44,6 +44,7 @@ static void HandleClient(TcpClient client)
     var listOfStrings = new List<string>();
 
     Console.WriteLine(request.Date.ToString());
+ 
     if (request.Date.ToString() == "0")
     {
 
@@ -51,15 +52,12 @@ static void HandleClient(TcpClient client)
 
     }
 
-
     if (string.IsNullOrEmpty(request.Method))
     {
 
         listOfStrings.Add("4 Missing method");
 
     }
-
-
 
     else if (request.Method.Equals("create") || request.Method.Equals("update") || request.Method.Equals("delete") || request.Method.Equals("read") || request.Method.Equals("echo") && string.IsNullOrEmpty(request?.Body))
     {
@@ -79,10 +77,17 @@ static void HandleClient(TcpClient client)
         listOfStrings.Add("illegal method");
     }
 
+
     if (request.Date.GetType() != typeof(DateTime))
     {
         listOfStrings.Add("illegal date");
     }
+
+    if (request.Body?.GetType() != typeof(JsonSerializer))
+    {
+        listOfStrings.Add("illegal body");
+    }
+
 
     Response response = CreateReponse(String.Join("\n", listOfStrings));
     SendResponse(stream, response);
