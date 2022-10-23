@@ -1,7 +1,7 @@
-using System.Net.Sockets;
 using System.Net;
-using System.Text.Json;
+using System.Net.Sockets;
 using System.Text;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using Xunit;
 
@@ -173,7 +173,7 @@ namespace Assignment3TestSuite
             Assert.Contains("illegal body", response?.Status?.ToLower());
 
         }
-#if COMMENT
+#if comment
         /* Echo Test */
         [Fact]
         public void Echo_RequestWithBody_ReturnsBody()
@@ -201,7 +201,7 @@ namespace Assignment3TestSuite
         ////////////////////////////////////////////////////////// 
 
         /* Path tests  */
-
+#endif
         [Fact]
         public void Constraint_RequestWithInvalidPath_StatusBadRequest()
         {
@@ -211,7 +211,7 @@ namespace Assignment3TestSuite
             {
                 Method = "read",
                 Path = "/api/xxx",
-                Date = UnixTimestamp()
+                Date = 1234
             };
 
             client.SendRequest(request.ToJson());
@@ -222,6 +222,7 @@ namespace Assignment3TestSuite
             Assert.Equal(expectedResponse.ToJson().ToLower(), response?.ToJson().ToLower());
         }
 
+#if comment
         [Fact]
         public void Constraint_RequestWithInvalidPathId_StatusBadRequest()
         {
@@ -231,7 +232,7 @@ namespace Assignment3TestSuite
             {
                 Method = "read",
                 Path = "/api/categories/xxx",
-                Date = UnixTimestamp()
+                Date = 1234
             };
 
             client.SendRequest(request.ToJson());
@@ -251,7 +252,7 @@ namespace Assignment3TestSuite
             {
                 Method = "create",
                 Path = "/api/categories/1",
-                Date = UnixTimestamp(),
+                Date = 1234,
                 Body = (new { Name = "" }).ToJson()
             };
 
@@ -272,7 +273,7 @@ namespace Assignment3TestSuite
             {
                 Method = "update",
                 Path = "/api/categories",
-                Date = UnixTimestamp(),
+                Date = 1234,
                 Body = (new { Name = "" }).ToJson()
             };
 
