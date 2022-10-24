@@ -495,7 +495,7 @@ namespace Assignment3TestSuite
             {
                 Method = "create",
                 Path = "/api/categories",
-                Date = UnixTimestamp(),
+                Date = 1234,
                 Body = (new { name = "Testing" }).ToJson()
             };
 

@@ -56,14 +56,12 @@ static void HandleClient(TcpClient client, Dictionary<int, string>? data)
 
     
 
-        if (request.Method == "echo" && !string.IsNullOrEmpty(request.Body))
-        {
-
+     if (request.Method == "echo" && !string.IsNullOrEmpty(request.Body))
+     {
             Response response = CreateReponse("", request.Body);
             SendResponse(stream, response);
             stream.Close();
-
-        }
+     }
 
     if (!string.IsNullOrEmpty(request.Path) && request.Path.Contains("xxx"))
     {
@@ -72,9 +70,11 @@ static void HandleClient(TcpClient client, Dictionary<int, string>? data)
         stream.Close();
     }
 
+
+
+
     else
         {
-
             if (string.IsNullOrEmpty(request.Method))
             {
 
@@ -121,9 +121,8 @@ static void HandleClient(TcpClient client, Dictionary<int, string>? data)
             SendResponse(stream, response);
             stream.Close();
 
-        }
-
-    
+    }
+  
 }
 
 
