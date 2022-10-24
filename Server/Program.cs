@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.Json;
 using System.Linq;
 
+
 Console.WriteLine("Hello, World!");
 
 var server = new TcpListener(IPAddress.Loopback, 5000);
@@ -48,31 +49,15 @@ static void HandleClient(TcpClient client, Dictionary<int, string>? data)
     Console.WriteLine(requestText);
     var request = JsonSerializer.Deserialize<Request>(requestText);
     var listOfStrings = new List<string>();
-   // var split_path = request.Path.Split("/");
-
-    
-
-  //  Console.WriteLine(split_path);
 
 
-    if (request.Method == "echo" && !string.IsNullOrEmpty(request?.Body))
-    {
-        listOfStrings.Add("Hello World");
-    }
-
-    
-
-   //if (!split_path[2].All(char.IsDigit))
-
-   // {
-   //     Console.WriteLine("YESSSSSS");
-   //     listOfStrings.Clear();
-   //     listOfStrings.Add("4 Bad Request");
        
-   // }
 
-    else
-    {
+        if (request.Method == "echo" && !string.IsNullOrEmpty(request.Body))
+        {
+            Response r = CreateReponse(request.Body);
+            SendResponse(stream, r);
+        }
 
         if (request.Date.ToString() == "0")
         {
@@ -93,10 +78,11 @@ static void HandleClient(TcpClient client, Dictionary<int, string>? data)
 
             listOfStrings.Add("missing resource");
 
-            if (request.Method.Equals("echo") || request.Method.Equals("create") || request.Method.Equals("update"))
-            {
-                listOfStrings.Add("missing body");
-            }
+                if (request.Method.Equals("echo") || request.Method.Equals("create") || request.Method.Equals("update"))
+                {
+                    listOfStrings.Add("missing body");
+                }
+
         }
 
         else
@@ -114,8 +100,14 @@ static void HandleClient(TcpClient client, Dictionary<int, string>? data)
         {
             listOfStrings.Add("illegal body");
         }
-  
-    }
+
+    //if (!request.Path.Contains("1") || !request.Path.Contains("2") || !request.Path.Contains("3"))
+    //{
+    //    Console.WriteLine("YESSSSSS");
+    //    listOfStrings.Clear();
+    //    listOfStrings.Add("4 Bad Request");
+    //    listOfStrings.Add(request.Body);
+    //}
 
     Response response = CreateReponse(String.Join("\n", listOfStrings));
     SendResponse(stream, response);
@@ -131,7 +123,7 @@ static void SendResponse(NetworkStream stream, Response response)
     stream.Write(responseBuffer);
 }
 
-static Response CreateReponse(string status, string body = null)
+static Response CreateReponse(string status, string body="")
 {
     return new Response
     {

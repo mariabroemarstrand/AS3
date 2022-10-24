@@ -173,7 +173,7 @@ namespace Assignment3TestSuite
             Assert.Contains("illegal body", response?.Status?.ToLower());
 
         }
-#if comment
+
         /* Echo Test */
         [Fact]
         public void Echo_RequestWithBody_ReturnsBody()
@@ -201,7 +201,7 @@ namespace Assignment3TestSuite
         ////////////////////////////////////////////////////////// 
 
         /* Path tests  */
-#endif
+
         [Fact]
         public void Constraint_RequestWithInvalidPath_StatusBadRequest()
         {
