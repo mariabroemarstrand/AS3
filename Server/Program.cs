@@ -51,20 +51,25 @@ static void HandleClient(TcpClient client, Dictionary<int, string>? data)
     var listOfStrings = new List<string>();
 
 
-       
 
-        if (request.Method == "echo" && !string.IsNullOrEmpty(request.Body))
-        {
-            Response r = CreateReponse(request.Body);
-            SendResponse(stream, r);
-        }
+    //if (!request.Path.Contains("1") || !request.Path.Contains("2") || !request.Path.Contains("3"))
+    //{
+    //    Response response = CreateReponse("4 Bad Request", "");
+    //    SendResponse(stream, response);
+    //    stream.Close();
+    //}
 
-        if (request.Date.ToString() == "0")
-        {
+    if (request.Method== "echo" && !string.IsNullOrEmpty(request.Body))
+    {
 
-            listOfStrings.Add("missing date");
+        Response response = CreateReponse("", request.Body);
+        SendResponse(stream, response);
+        stream.Close();
 
-        }
+    }
+
+    else
+    {
 
         if (string.IsNullOrEmpty(request.Method))
         {
@@ -78,10 +83,10 @@ static void HandleClient(TcpClient client, Dictionary<int, string>? data)
 
             listOfStrings.Add("missing resource");
 
-                if (request.Method.Equals("echo") || request.Method.Equals("create") || request.Method.Equals("update"))
-                {
-                    listOfStrings.Add("missing body");
-                }
+            if (request.Method.Equals("echo") || request.Method.Equals("create") || request.Method.Equals("update"))
+            {
+                listOfStrings.Add("missing body");
+            }
 
         }
 
@@ -95,23 +100,26 @@ static void HandleClient(TcpClient client, Dictionary<int, string>? data)
         {
             listOfStrings.Add("illegal date");
         }
+        if (request.Date.ToString() == "0")
+        {
+
+            listOfStrings.Add("missing date");
+
+        }
 
         if (request.Body?.GetType() != typeof(JsonSerializer))
         {
             listOfStrings.Add("illegal body");
         }
 
-    //if (!request.Path.Contains("1") || !request.Path.Contains("2") || !request.Path.Contains("3"))
-    //{
-    //    Console.WriteLine("YESSSSSS");
-    //    listOfStrings.Clear();
-    //    listOfStrings.Add("4 Bad Request");
-    //    listOfStrings.Add(request.Body);
-    //}
+     
+        Response response = CreateReponse( String.Join("\n", listOfStrings), "");
+        SendResponse(stream, response);
+        stream.Close();
 
-    Response response = CreateReponse(String.Join("\n", listOfStrings));
-    SendResponse(stream, response);
-    stream.Close();
+    }
+    
+
 }
 
 
@@ -123,7 +131,7 @@ static void SendResponse(NetworkStream stream, Response response)
     stream.Write(responseBuffer);
 }
 
-static Response CreateReponse(string status, string body="")
+static Response CreateReponse(string status, string body)
 {
     return new Response
     {
