@@ -52,74 +52,78 @@ static void HandleClient(TcpClient client, Dictionary<int, string>? data)
 
 
 
-    //if (!request.Path.Contains("1") || !request.Path.Contains("2") || !request.Path.Contains("3"))
-    //{
-    //    Response response = CreateReponse("4 Bad Request", "");
-    //    SendResponse(stream, response);
-    //    stream.Close();
-    //}
+   
 
-    if (request.Method== "echo" && !string.IsNullOrEmpty(request.Body))
+    
+
+        if (request.Method == "echo" && !string.IsNullOrEmpty(request.Body))
+        {
+
+            Response response = CreateReponse("", request.Body);
+            SendResponse(stream, response);
+            stream.Close();
+
+        }
+
+    if (!string.IsNullOrEmpty(request.Path) && request.Path.Contains("xxx"))
     {
-
-        Response response = CreateReponse("", request.Body);
+        Response response = CreateReponse("4 Bad Request", null);
         SendResponse(stream, response);
         stream.Close();
-
     }
 
     else
-    {
-
-        if (string.IsNullOrEmpty(request.Method))
         {
 
-            listOfStrings.Add("4 Missing method");
-
-        }
-
-        else if (request.Method.Equals("create") || request.Method.Equals("update") || request.Method.Equals("delete") || request.Method.Equals("read") || request.Method.Equals("echo") && string.IsNullOrEmpty(request?.Body))
-        {
-
-            listOfStrings.Add("missing resource");
-
-            if (request.Method.Equals("echo") || request.Method.Equals("create") || request.Method.Equals("update"))
+            if (string.IsNullOrEmpty(request.Method))
             {
-                listOfStrings.Add("missing body");
+
+                listOfStrings.Add("4 Missing method");
+
             }
 
+            else if (request.Method.Equals("create") || request.Method.Equals("update") || request.Method.Equals("delete") || request.Method.Equals("read") || request.Method.Equals("echo") && string.IsNullOrEmpty(request?.Body))
+            {
+
+                listOfStrings.Add("missing resource");
+
+                if (request.Method.Equals("echo") || request.Method.Equals("create") || request.Method.Equals("update"))
+                {
+                    listOfStrings.Add("missing body");
+                }
+
+            }
+
+            else
+            {
+
+                listOfStrings.Add("illegal method");
+            }
+
+            if (request.Date.GetType() != typeof(DateTime))
+            {
+                listOfStrings.Add("illegal date");
+            }
+            if (request.Date.ToString() == "0")
+            {
+
+                listOfStrings.Add("missing date");
+
+            }
+
+            if (request.Body?.GetType() != typeof(JsonSerializer))
+            {
+                listOfStrings.Add("illegal body");
+            }
+
+
+            Response response = CreateReponse(String.Join("\n", listOfStrings), "");
+            SendResponse(stream, response);
+            stream.Close();
+
         }
 
-        else
-        {
-
-            listOfStrings.Add("illegal method");
-        }
-
-        if (request.Date.GetType() != typeof(DateTime))
-        {
-            listOfStrings.Add("illegal date");
-        }
-        if (request.Date.ToString() == "0")
-        {
-
-            listOfStrings.Add("missing date");
-
-        }
-
-        if (request.Body?.GetType() != typeof(JsonSerializer))
-        {
-            listOfStrings.Add("illegal body");
-        }
-
-     
-        Response response = CreateReponse( String.Join("\n", listOfStrings), "");
-        SendResponse(stream, response);
-        stream.Close();
-
-    }
     
-
 }
 
 
